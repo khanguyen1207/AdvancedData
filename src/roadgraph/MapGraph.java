@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
@@ -222,9 +223,26 @@ public class MapGraph {
 										  GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
 	{
 		// TODO: Implement this method in WEEK 3
-
+		//Comperator<Edges>
+		HashSet<Nodes> visitedSet = new HashSet<Nodes>();
+		HashMap<Nodes, Nodes> parentMap = new HashMap<Nodes, Nodes>();
+		Nodes goalNode = nodeList.get(goal);
+		PriorityQueue<Nodes> myQueue = new PriorityQueue<Nodes>();
+		myQueue.add(nodeList.get(start));
+		Nodes temp;
+		while (!myQueue.isEmpty()){
+			temp = myQueue.remove();
+			if (!visitedSet.contains(temp)){
+				visitedSet.add(temp);
+				if (!temp.equals(goalNode)){
+					
+				}
+			}
+		}
+		
 		// Hook for visualization.  See writeup.
 		//nodeSearched.accept(next.getLocation());
+		
 		
 		return null;
 	}
