@@ -225,6 +225,7 @@ public class MapGraph {
 	{
 		// TODO: Implement this method in WEEK 3
 		//Comperator<Edges>
+		int count = 0;
 		HashSet<Nodes> visitedSet = new HashSet<Nodes>();
 		HashMap<Nodes, Nodes> parentMap = new HashMap<Nodes, Nodes>();
 		Nodes goalNode = nodeList.get(goal);
@@ -235,6 +236,7 @@ public class MapGraph {
 		Nodes temp;
 		while (!myQueue.isEmpty()){
 			temp = myQueue.remove();
+			count++;
 			if (!visitedSet.contains(temp)){
 				visitedSet.add(temp);
 				if (!temp.equals(goalNode)){
@@ -259,6 +261,7 @@ public class MapGraph {
 						temp = parentMap.get(temp);
 						result.addFirst(temp.getLocation());
 					}
+					//System.out.println(count);
 					return result;
 				}
 			}
@@ -299,6 +302,7 @@ public class MapGraph {
 		
 		// Hook for visualization.  See writeup.
 		//nodeSearched.accept(next.getLocation());
+		int count = 0;
 		HashSet<Nodes> visitedSet = new HashSet<Nodes>();
 		HashMap<Nodes, Nodes> parentMap = new HashMap<Nodes, Nodes>();
 		Nodes goalNode = nodeList.get(goal);
@@ -309,6 +313,7 @@ public class MapGraph {
 		Nodes temp;
 		while (!myQueue.isEmpty()){
 			temp = myQueue.remove();
+			count++;
 			if (!visitedSet.contains(temp)){
 				visitedSet.add(temp);
 				if (!temp.equals(goalNode)){
@@ -333,6 +338,7 @@ public class MapGraph {
 						temp = parentMap.get(temp);
 						result.addFirst(temp.getLocation());
 					}
+					System.out.println(count);
 					return result;
 				}
 			}
@@ -340,31 +346,20 @@ public class MapGraph {
 		return null;
 	}
 	
-	private static double getRoadLength(GeographicPoint start, GeographicPoint end,
-			List<GeographicPoint> path)
-	{
-		double dist = 0.0;
-		GeographicPoint curr = start;
-		for (GeographicPoint next : path) {
-			dist += curr.distance(next);
-			curr = next;
-		}
-		dist += curr.distance(end);
-		return dist;
-	}
+	
 	
 	
 	public static void main(String[] args)
 	{
-		System.out.print("Making a new map...");
+		/*System.out.print("Making a new map...");
 		MapGraph theMap = new MapGraph();
 		System.out.print("DONE. \nLoading the map...");
 		GraphLoader.loadRoadMap("data/testdata/simpletest.map", theMap);
-		System.out.println("DONE.");
+		System.out.println("DONE.");*/
 		
 		// You can use this method for testing.  
 		
-		/* Use this code in Week 3 End of Week Quiz
+		 //Use this code in Week 3 End of Week Quiz
 		MapGraph theMap = new MapGraph();
 		System.out.print("DONE. \nLoading the map...");
 		GraphLoader.loadRoadMap("data/maps/utc.map", theMap);
@@ -374,10 +369,10 @@ public class MapGraph {
 		GeographicPoint end = new GeographicPoint(32.8660691, -117.217393);
 		
 		
-		List<GeographicPoint> route = theMap.dijkstra(start,end);
+		//List<GeographicPoint> route = theMap.dijkstra(start,end);
 		List<GeographicPoint> route2 = theMap.aStarSearch(start,end);
 
-		*/
+		
 		
 	}
 	
