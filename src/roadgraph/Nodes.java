@@ -13,7 +13,7 @@ public class Nodes implements Comparable<Object>{
 		// TODO Auto-generated constructor stub
 		this.setLocation(location);
 		this.setLstEdges(new LinkedList<Edges>());
-		distance = 0.0;
+		distance = Double.MAX_VALUE;
 		actualDistance = 0.0;
 	}
 

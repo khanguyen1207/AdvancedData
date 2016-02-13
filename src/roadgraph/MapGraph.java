@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
-import java.util.Stack;
 import java.util.function.Consumer;
 
 import geography.GeographicPoint;
@@ -121,6 +120,9 @@ public class MapGraph {
 			String roadType, double length) throws IllegalArgumentException {
 
 		//TODO: Implement this method in WEEK 2
+//		System.out.println("length " + length);
+//		System.out.println("Start node " + from.toString());
+//		System.out.println("End node " + to.toString());
 		Edges temp = new Edges(from, to, length, roadName, roadType);
 		nodeList.get(from).addEdges(temp);
 		edgesSet.add(temp);
@@ -160,7 +162,6 @@ public class MapGraph {
 		Queue<Nodes> myQueue = new LinkedList<Nodes>();
 		try {
 			myQueue.add(nodeList.get(start));
-			//System.out.println("Con cac 1");
 			
 		} catch (Exception e){
 			
@@ -228,6 +229,8 @@ public class MapGraph {
 		HashMap<Nodes, Nodes> parentMap = new HashMap<Nodes, Nodes>();
 		Nodes goalNode = nodeList.get(goal);
 		PriorityQueue<Nodes> myQueue = new PriorityQueue<Nodes>();
+		LinkedList<GeographicPoint> result = new LinkedList<GeographicPoint>();
+		nodeList.get(start).setDistance(0.0);
 		myQueue.add(nodeList.get(start));
 		Nodes temp;
 		while (!myQueue.isEmpty()){
@@ -235,7 +238,28 @@ public class MapGraph {
 			if (!visitedSet.contains(temp)){
 				visitedSet.add(temp);
 				if (!temp.equals(goalNode)){
-					
+					Nodes visitingNode;
+					for (int i = 0; i < temp.getLstEdges().size(); i++){
+						visitingNode = getNodeFromPoint(temp.getEndLocationByIndex(i));
+						if (!visitedSet.contains(visitingNode)){
+							if (visitingNode.getDistance() > temp.getDistance() + temp.getLstEdges().get(i).getLength()){
+								//System.out.println("Visiting node distance " + visitingNode.getDistance() + " Tostring " + visitingNode.getLocation().toString());
+								visitingNode.setDistance(temp.getDistance() + temp.getLstEdges().get(i).getLength());
+								parentMap.put(visitingNode, temp); 
+							}
+							//visitingNode.setDistance(temp.getDistance() + temp.getLstEdges().get(i).getLength());
+							//parentMap.put(visitingNode, temp);
+							myQueue.add(visitingNode);
+						}
+					}
+				}
+				else {
+					result.addLast(temp.getLocation());
+					while (parentMap.containsKey(temp)){
+						temp = parentMap.get(temp);
+						result.addFirst(temp.getLocation());
+					}
+					return result;
 				}
 			}
 		}
@@ -275,10 +299,59 @@ public class MapGraph {
 		
 		// Hook for visualization.  See writeup.
 		//nodeSearched.accept(next.getLocation());
-		
+		HashSet<Nodes> visitedSet = new HashSet<Nodes>();
+		HashMap<Nodes, Nodes> parentMap = new HashMap<Nodes, Nodes>();
+		Nodes goalNode = nodeList.get(goal);
+		PriorityQueue<Nodes> myQueue = new PriorityQueue<Nodes>();
+		LinkedList<GeographicPoint> result = new LinkedList<GeographicPoint>();
+		nodeList.get(start).setDistance(0.0);
+		myQueue.add(nodeList.get(start));
+		Nodes temp;
+		while (!myQueue.isEmpty()){
+			temp = myQueue.remove();
+			if (!visitedSet.contains(temp)){
+				visitedSet.add(temp);
+				if (!temp.equals(goalNode)){
+					Nodes visitingNode;
+					for (int i = 0; i < temp.getLstEdges().size(); i++){
+						visitingNode = getNodeFromPoint(temp.getEndLocationByIndex(i));
+						if (!visitedSet.contains(visitingNode)){
+							if (visitingNode.getDistance() > temp.getDistance() + temp.getLstEdges().get(i).getLength() + visitingNode.getLocation().distance(goal)){
+								//System.out.println("Visiting node distance " + visitingNode.getDistance() + " Tostring " + visitingNode.getLocation().toString());
+								visitingNode.setDistance(temp.getDistance() + temp.getLstEdges().get(i).getLength() + visitingNode.getLocation().distance(goal));
+								parentMap.put(visitingNode, temp); 
+							}
+							//visitingNode.setDistance(temp.getDistance() + temp.getLstEdges().get(i).getLength());
+							//parentMap.put(visitingNode, temp);
+							myQueue.add(visitingNode);
+						}
+					}
+				}
+				else {
+					result.addLast(temp.getLocation());
+					while (parentMap.containsKey(temp)){
+						temp = parentMap.get(temp);
+						result.addFirst(temp.getLocation());
+					}
+					return result;
+				}
+			}
+		}
 		return null;
 	}
-
+	
+	private static double getRoadLength(GeographicPoint start, GeographicPoint end,
+			List<GeographicPoint> path)
+	{
+		double dist = 0.0;
+		GeographicPoint curr = start;
+		for (GeographicPoint next : path) {
+			dist += curr.distance(next);
+			curr = next;
+		}
+		dist += curr.distance(end);
+		return dist;
+	}
 	
 	
 	public static void main(String[] args)
